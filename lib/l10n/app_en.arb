@@ -1,0 +1,99 @@
+{
+  "@@locale": "en",
+  "appTitle": "Daily Task AI Evaluator",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "homeTitle": "Progress Dashboard",
+  "@homeTitle": {
+    "description": "Home page app bar title"
+  },
+  "progress": "Progress",
+  "noEntriesYet": "No entries yet",
+  "addFirstTaskPrompt": "Add your first daily task to see progress metrics.",
+  "vocabularyQuality": "Vocabulary Quality",
+  "wordCount": "Word Count",
+  "totalEntries": "Total Entries",
+  "avgLettersPerWord": "Avg. L/W",
+  "wordsPerEntry": "Words/Entry",
+  "tasksLogged": "Tasks Logged",
+  "newTask": "New Task",
+  "addNewTask": "Add New Task",
+  "recentEntries": "Recent Entries",
+  "noEntriesYetTitle": "No entries yet",
+  "useNewTaskButton": "Use the \"New Task\" button to\ncreate your first daily task",
+  "tapPlusButton": "Tap the + button to create\nyour first daily task",
+  "selectEntryDetails": "Select an entry to see details",
+  "yourWritingProgress": "Your Writing Progress",
+  "trackQualityQuantity": "Track quality, quantity, and AI feedback across your journal entries.",
+  "wordsPerEntrySlash": "Words / Entry",
+  "newDailyTask": "New Daily Task",
+  "pleaseEnterText": "Please enter some text to analyze",
+  "analysisFailed": "Analysis failed: {error}",
+  "@analysisFailed": {
+    "description": "Error message when AI analysis fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsAppearHere": "Insights appear here",
+  "insightsDescription": "Write your daily reflections and tap \"Analyze with AI\" to generate feedback and key vocabulary suggestions.",
+  "analysisResults": "Analysis Results",
+  "words": "Words",
+  "avgLW": "Avg L/W",
+  "clarity": "Clarity",
+  "clarityScore": "{score}/5",
+  "@clarityScore": {
+    "description": "Clarity score display",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "keyMetricsExplanation": "Key Metrics Explanation",
+  "aiFeedback": "AI Feedback",
+  "strongWords": "Strong Words",
+  "captureReflection": "Capture today's reflection",
+  "captureReflectionDescription": "Describe what you learned, built, or observed. Richer details help the AI deliver more nuanced insights.",
+  "entryPlaceholder": "Write or paste your daily task entry here...\n\n(e.g., 'Flutter is a cross-platform app development framework...')",
+  "analyzeWithAI": "Analyze with AI",
+  "runAnalysisPrompt": "Run an analysis to unlock AI-generated insights.",
+  "saveToHistory": "Save to History",
+  "quality": "Quality",
+  "quantity": "Quantity",
+  "analysisDetails": "Analysis Details",
+  "yourEntry": "Your Entry",
+  "quantitativeMetrics": "Quantitative Metrics",
+  "keyVocabulary": "Key Vocabulary",
+  "aiQualitativeFeedback": "AI Qualitative Feedback",
+  "lettersSuffix": " L/W",
+  "wordsSuffix": " W",
+  "fallbackFeedback": "Your writing has {wordCount} words with an average of {avgLetters} letters per word. Keep practicing to improve vocabulary richness!",
+  "@fallbackFeedback": {
+    "description": "Fallback feedback when AI fails",
+    "placeholders": {
+      "wordCount": {
+        "type": "int"
+      },
+      "avgLetters": {
+        "type": "String"
+      }
+    }
+  },
+  "fallbackKeyMetric": "Average word length: {avgLetters} letters. Keep working on using more descriptive words.",
+  "@fallbackKeyMetric": {
+    "description": "Fallback key metric when AI fails",
+    "placeholders": {
+      "avgLetters": {
+        "type": "String"
+      }
+    }
+  },
+  "fallbackKeyMetricError": "Keep working on your writing skills.",
+  "fallbackFeedbackBasic": "Good effort! Keep writing.",
+  "fallbackKeyMetricBasic": "Unable to calculate metrics.",
+  "textCannotBeEmpty": "Text cannot be empty"
+}
