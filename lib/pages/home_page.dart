@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/app_constants.dart';
 import '../constants/app_palette.dart';
@@ -13,7 +14,7 @@ import '../widgets/metric_chart_card.dart';
 
 class HomePage extends StatefulWidget {
   final void Function(Locale) onLocaleChange;
-  
+
   const HomePage({super.key, required this.onLocaleChange});
 
   @override
@@ -29,17 +30,24 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final currentLocale = Localizations.localeOf(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.homeTitle),
         actions: [
           IconButton(
+            icon: const Icon(Icons.code),
+            tooltip: 'View on GitHub',
+            onPressed: () => launchUrl(
+              Uri.parse('https://github.com/MoathCodes/daily_task_analyzer'),
+            ),
+          ),
+          IconButton(
             icon: const Icon(Icons.language),
             onPressed: () {
-              final newLocale = currentLocale.languageCode == 'en' 
-                ? const Locale('ar') 
-                : const Locale('en');
+              final newLocale = currentLocale.languageCode == 'en'
+                  ? const Locale('ar')
+                  : const Locale('en');
               widget.onLocaleChange(newLocale);
             },
             tooltip: currentLocale.languageCode == 'en' ? 'العربية' : 'English',
@@ -97,7 +105,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildDesktopLayout() {
     final l10n = AppLocalizations.of(context)!;
-    
+
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -287,7 +295,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildMobileLayout() {
     final l10n = AppLocalizations.of(context)!;
-    
+
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -446,4 +454,3 @@ class _HomePageState extends State<HomePage> {
     });
   }
 }
-
