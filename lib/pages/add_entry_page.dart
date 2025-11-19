@@ -1,4 +1,8 @@
+import 'package:daily_task_analyzer/widgets/ai_feedback.dart';
+import 'package:daily_task_analyzer/widgets/metric_box.dart';
+import 'package:daily_task_analyzer/widgets/section_header.dart';
 import 'package:flutter/material.dart';
+import 'package:forui/forui.dart';
 
 import '../constants/app_palette.dart';
 import '../l10n/app_localizations.dart';
@@ -23,40 +27,40 @@ class _AddEntryPageState extends State<AddEntryPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.newDailyTask)),
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppPalette.pageGradient),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isDesktop = constraints.maxWidth >= 1000;
-            return Align(
-              alignment: Alignment.topCenter,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: isDesktop ? 1200 : 640),
-                  child: isDesktop
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: _buildFormSection(isDesktop),
-                            ),
-                            const SizedBox(width: 24),
-                            Expanded(
-                              flex: 2,
-                              child: _buildDesktopAnalysisPanel(),
-                            ),
-                          ],
-                        )
-                      : _buildMobileContent(),
-                ),
+    return FScaffold(
+      header: FHeader.nested(
+        prefixes: [FHeaderAction.back(onPress: Navigator.of(context).pop)],
+        title: Text(l10n.newDailyTask),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isDesktop = constraints.maxWidth >= 1000;
+          return Align(
+            alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: isDesktop ? 1200 : 640),
+                child: isDesktop
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: _buildFormSection(isDesktop),
+                          ),
+                          const SizedBox(width: 24),
+                          Expanded(
+                            flex: 2,
+                            child: _buildDesktopAnalysisPanel(),
+                          ),
+                        ],
+                      )
+                    : _buildMobileContent(),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -103,35 +107,39 @@ class _AddEntryPageState extends State<AddEntryPage> {
 
   Widget _buildAnalysisPlaceholder() {
     final l10n = AppLocalizations.of(context)!;
-    return Container(
-      key: const ValueKey('placeholder'),
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: AppPalette.surfaceHigh.withOpacity(0.7),
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.auto_awesome, size: 48, color: AppPalette.primary),
-          const SizedBox(height: 16),
-          Text(
-            l10n.insightsAppearHere,
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+    final theme = context.theme;
+    return SizedBox(
+      height: 465,
+      child: FCard(
+        key: const ValueKey('placeholder'),
+        // padding: const EdgeInsets.all(28),
+        // decoration: BoxDecoration(
+        //   color: AppPalette.surfaceHigh.withOpacity(0.7),
+        //   borderRadius: BorderRadius.circular(32),
+        //   border: Border.all(color: Colors.white.withOpacity(0.05)),
+        // ),
+        child: Expanded(
+          child: Column(
+            mainAxisAlignment: .center,
+            children: [
+              Icon(Icons.auto_awesome, size: 48, color: AppPalette.primary),
+              const SizedBox(height: 16),
+              Text(
+                l10n.insightsAppearHere,
+                style: theme.typography.xl.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.insightsDescription,
+                textAlign: TextAlign.center,
+                style: theme.typography.base.copyWith(
+                  color: AppPalette.textMuted,
+                  height: 1.5,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            l10n.insightsDescription,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppPalette.textMuted,
-              height: 1.5,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -139,111 +147,82 @@ class _AddEntryPageState extends State<AddEntryPage> {
   Widget _buildAnalysisResults() {
     final l10n = AppLocalizations.of(context)!;
     final result = _analysisResult!;
+    final theme = context.theme;
 
-    return Container(
+    return FCard(
       key: const ValueKey('analysis-results'),
-      decoration: BoxDecoration(
-        color: AppPalette.surfaceHigh,
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
-      ),
-      padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             l10n.analysisResults,
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.typography.xl.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 18),
           Row(
             children: [
               Expanded(
-                child: _buildMetricItem(
-                  l10n.words,
-                  result.wordCount.toString(),
-                  Icons.text_fields,
+                child: MetricBox.icon(
+                  label: l10n.words,
+                  value: result.wordCount.toString(),
+                  icon: FIcons.wholeWord,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildMetricItem(
-                  l10n.avgLW,
-                  result.avgWordLength.toStringAsFixed(1),
-                  Icons.straighten,
+                child: MetricBox.icon(
+                  label: l10n.avgLW,
+                  value: result.avgWordLength.toStringAsFixed(1),
+                  icon: FIcons.rulerDimensionLine,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildMetricItem(
-                  l10n.clarity,
-                  l10n.clarityScore(result.clarityScore),
-                  Icons.stars,
+                child: MetricBox.icon(
+                  label: l10n.clarity,
+                  value: l10n.clarityScore(result.clarityScore),
+                  icon: FIcons.star,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 24),
-          Text(
-            l10n.keyMetricsExplanation,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
+          SectionHeader(title: l10n.keyMetricsExplanation),
           const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppPalette.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppPalette.primary.withOpacity(0.3)),
-            ),
-            child: Text(
-              result.keyMetric,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(height: 1.6),
+          Text(
+            result.keyMetric,
+            style: theme.typography.base.copyWith(
+              height: 1.6,
+              color: theme.colors.mutedForeground,
             ),
           ),
           const SizedBox(height: 24),
-          Text(
-            l10n.aiFeedback,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            result.aiFeedback,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(height: 1.6),
-          ),
+          AIFeedback(aiFeedback: result.aiFeedback),
           if (result.keyVocabulary.isNotEmpty) ...[
             const SizedBox(height: 20),
-            Text(
-              l10n.strongWords,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-            ),
+            SectionHeader(title: l10n.keyVocabulary),
             const SizedBox(height: 10),
             Wrap(
               spacing: 10,
               runSpacing: 8,
               children: result.keyVocabulary
                   .map(
-                    (word) => Chip(
-                      label: Text(word),
-                      backgroundColor: AppPalette.surface,
-                      side: BorderSide(color: Colors.white.withOpacity(0.08)),
+                    (word) => FBadge(
+                      style: (style) => style.copyWith(
+                        decoration: style.decoration.copyWith(
+                          color:
+                              theme.colors.mutedForeground.withValues(alpha: 0.2),
+                          border: Border.all(color: Colors.white),
+                        ),
+                      ),
+                      child: Text(word, style: .new(color: Colors.white)),
                     ),
                   )
                   .toList(),
             ),
           ],
+          const SizedBox(height: 24),
+          _buildSaveButton(),
         ],
       ),
     );
@@ -254,109 +233,56 @@ class _AddEntryPageState extends State<AddEntryPage> {
       duration: const Duration(milliseconds: 250),
       child: _analysisResult == null
           ? _buildAnalysisPlaceholder()
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildAnalysisResults(),
-                const SizedBox(height: 24),
-                _buildSaveButton(),
-              ],
-            ),
+          : _buildAnalysisResults(),
     );
   }
 
   Widget _buildFormSection(bool isDesktop) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Container(
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: AppPalette.surfaceHigh.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
-        boxShadow: [AppPalette.glow(AppPalette.surfaceHigh)],
+    return FCard(
+      // padding: const EdgeInsets.all(28),
+      // decoration: BoxDecoration(
+      //   color: AppPalette.surfaceHigh.withOpacity(0.9),
+      //   borderRadius: BorderRadius.circular(32),
+      //   border: Border.all(color: Colors.white.withOpacity(0.05)),
+      // ),
+      title: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(l10n.captureReflection),
+      ),
+      subtitle: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(l10n.captureReflectionDescription),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            l10n.captureReflection,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            l10n.captureReflectionDescription,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: AppPalette.textMuted),
-          ),
-          const SizedBox(height: 24),
-          TextField(
+          FTextField.multiline(
             controller: _textController,
             minLines: isDesktop ? 14 : 8,
             maxLines: isDesktop ? 20 : 14,
-            decoration: InputDecoration(hintText: l10n.entryPlaceholder),
+            hint: l10n.entryPlaceholder,
+            // decoration: InputDecoration(hintText: l10n.entryPlaceholder),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton.icon(
-            onPressed: _isLoading ? null : _analyzeText,
-            icon: const Icon(Icons.analytics_outlined),
-            label: _isLoading
+          const SizedBox(height: 16),
+          FButton(
+            onPress: _isLoading ? null : _analyzeText,
+            prefix: const Icon(FIcons.wandSparkles),
+            child: _isLoading
                 ? const SizedBox(
                     width: 20,
                     height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
+                    child: FCircularProgress.loader(),
                   )
                 : Text(l10n.analyzeWithAI),
           ),
-          if (!isDesktop && _analysisResult == null)
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: Text(
-                l10n.runAnalysisPrompt,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: AppPalette.textMuted),
-              ),
-            ),
         ],
       ),
     );
   }
 
-  Widget _buildMetricItem(String label, String value, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22),
-        gradient: AppPalette.cardGradient,
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, size: 32, color: AppPalette.secondary),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          Text(
-            label,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: AppPalette.textMuted),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildMobileContent() {
     return Column(
@@ -366,8 +292,6 @@ class _AddEntryPageState extends State<AddEntryPage> {
         if (_analysisResult != null) ...[
           const SizedBox(height: 32),
           _buildAnalysisResults(),
-          const SizedBox(height: 24),
-          _buildSaveButton(),
         ],
       ],
     );
@@ -376,10 +300,10 @@ class _AddEntryPageState extends State<AddEntryPage> {
   Widget _buildSaveButton() {
     final l10n = AppLocalizations.of(context)!;
 
-    return FilledButton.icon(
-      onPressed: _saveEntry,
-      icon: const Icon(Icons.save),
-      label: Text(l10n.saveToHistory),
+    return FButton(
+      onPress: _saveEntry,
+      prefix: const Icon(Icons.save),
+      child: Text(l10n.saveToHistory),
     );
   }
 
@@ -387,7 +311,7 @@ class _AddEntryPageState extends State<AddEntryPage> {
     if (_analysisResult == null) return;
 
     final entry = DailyTaskEntry(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: null,
       date: DateTime.now(),
       text: _textController.text,
       wordCount: _analysisResult!.wordCount,

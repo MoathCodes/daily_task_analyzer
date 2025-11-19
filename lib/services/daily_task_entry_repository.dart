@@ -9,7 +9,7 @@ final dailyTaskEntryRepository = HivezDailyTaskEntryRepository();
 abstract class DailyTaskEntryRepository {
   Future<void> add(DailyTaskEntry entry);
   Future<void> clear();
-  Future<void> delete(String id);
+  Future<void> delete(int id);
   Future<List<DailyTaskEntry>> getAll();
 }
 
@@ -21,6 +21,11 @@ class HivezDailyTaskEntryRepository implements DailyTaskEntryRepository {
   Future<void> add(DailyTaskEntry entry) async {
     final box = await _box();
     await box.add(entry);
+    final id = await box.firstKeyWhere((key, value) => value == entry);
+    if (id != null) {
+      final en = entry.copyWith(id: id);
+      await box.put(id, en);
+    }
   }
 
   @override
@@ -30,15 +35,11 @@ class HivezDailyTaskEntryRepository implements DailyTaskEntryRepository {
   }
 
   @override
-  Future<void> delete(String id) async {
+  Future<void> delete(int id) async {
     final box = await _box();
-    final keys = await box.getAllKeys();
-    for (final key in keys) {
-      final entry = await box.get(key);
-      if (entry?.id == id) {
-        await box.delete(key);
-        break;
-      }
+    final values = await box.getValuesWhere((e) => e.id != null && e.id == id);
+    for (final element in values) {
+      await box.delete(element.id!);
     }
   }
 

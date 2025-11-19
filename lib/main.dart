@@ -1,13 +1,13 @@
 import 'package:daily_task_analyzer/firebase_options.dart';
-import 'package:daily_task_analyzer/models/daily_task_entry.dart';
+import 'package:daily_task_analyzer/hive/hive_registrar.g.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:forui/forui.dart';
 import 'package:hivez_flutter/hivez_flutter.dart';
 
 import 'l10n/app_localizations.dart';
 import 'pages/home_page.dart';
-import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,9 +15,7 @@ void main() async {
   await Hive.initFlutter();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  Hive.registerAdapter(DailyTaskEntryAdapter());
-
+  Hive.registerAdapters();
   runApp(const DailyTaskApp());
 }
 
@@ -33,11 +31,10 @@ class _DailyTaskAppState extends State<DailyTaskApp> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = buildDarkTheme();
+    final theme = FThemes.zinc.dark;
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      theme: theme,
-      darkTheme: theme,
+      theme: theme.toApproximateMaterialTheme(),
       themeMode: ThemeMode.dark,
       locale: _locale,
       localizationsDelegates: const [
@@ -47,6 +44,7 @@ class _DailyTaskAppState extends State<DailyTaskApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('en'), Locale('ar')],
+      builder: (context, child) => FAnimatedTheme(data: theme, child: child!),
       home: HomePage(onLocaleChange: _setLocale),
       debugShowCheckedModeBanner: false,
     );

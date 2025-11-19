@@ -1,6 +1,6 @@
+import 'package:daily_task_analyzer/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-
-import '../constants/app_palette.dart';
+import 'package:forui/forui.dart';
 
 class MetricChartCard extends StatelessWidget {
   final String title;
@@ -22,60 +22,65 @@ class MetricChartCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gradient = LinearGradient(
-      colors: [color.withOpacity(0.45), color.withOpacity(0.15)],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    );
-
-    final card = AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+    final theme = context.theme;
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    // Fallback in case decoration color is null in some scaffold contexts (mobile early build)
+    final baseColor = theme.cardStyle.decoration.color ?? Colors.black;
+    final card = Container(
+      height: 120,
+      clipBehavior: Clip.hardEdge, // Ensures the overflow icon is clipped
       decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: BorderRadius.circular(28.0),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
-        boxShadow: [AppPalette.glow(color.withOpacity(0.9))],
+        gradient: LinearGradient(
+          colors: isArabic ? [baseColor, color] : [color, baseColor],
+          stops: isArabic ? [1 - 0.018, 1 - 0.018] : [0.018, 0.018],
+        ),
+        border: theme.cardStyle.decoration.border,
+        borderRadius: theme.cardStyle.decoration.borderRadius,
       ),
-      padding: const EdgeInsets.all(20.0),
-      width: 220,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.25),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: Colors.white),
-          ),
-          const SizedBox(height: 18),
-          Text(
-            title,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 6),
-          Text.rich(
-            TextSpan(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Header Row
+            Row(
               children: [
-                TextSpan(
-                  text: value,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                Icon(icon, size: 16, color: color),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
                   ),
-                ),
-                TextSpan(
-                  text: "  $unit",
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelLarge?.copyWith(color: Colors.white70),
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+
+            // Big Value Text
+            Text(
+              value,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.5,
+              ),
+            ),
+
+            // Subtitle Text
+            Text(
+              unit,
+              style: TextStyle(
+                color: Colors.grey[500], // muted-foreground
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
 

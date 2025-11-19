@@ -34,7 +34,6 @@ class AiAnalysisService {
       final response = await _model.generateContent(prompt);
       final responseText = response.text ?? '';
 
-      print(responseText);
 
       // Parse AI response
       final aiData = _parseAiResponse(responseText);

@@ -17,7 +17,7 @@ class DailyTaskEntryAdapter extends TypeAdapter<DailyTaskEntry> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return DailyTaskEntry(
-      id: fields[0] as String,
+      id: (fields[0] as num?)?.toInt(),
       date: fields[1] as DateTime,
       text: fields[2] as String,
       wordCount: (fields[3] as num).toInt(),
