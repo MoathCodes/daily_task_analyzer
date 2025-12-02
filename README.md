@@ -1,5 +1,11 @@
 # Daily Task Analyzer
 
+Live demo: https://daily-task-analyzer.web.app/
+
+Demo screenshots (click to open the live site):
+
+[![Mobile demo](images/mobile.png)](https://daily-task-analyzer.web.app/) [![Desktop demo](images/desktop.png)](https://daily-task-analyzer.web.app/)
+
 Daily Task Analyzer is a Flutter app that helps students practice short, high‑pressure writing and get instant feedback on the **quality** of their writing, not just the **quantity**.
 
 Students write a quick "daily task" entry, and the app:
