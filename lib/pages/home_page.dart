@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
     final theme = context.theme;
 
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: FCircularProgress());
     }
 
     final hasEntries = _entries.isNotEmpty;
@@ -135,7 +135,6 @@ class _HomePageState extends State<HomePage> {
                     for (final entry in mockEntries) {
                       await dailyTaskEntryRepository.add(entry);
                     }
-                    _loadEntries();
                   },
                   child: Text("Populate Database"),
                 ),
